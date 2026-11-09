@@ -1,0 +1,171 @@
+---
+id: webhooks
+sidebar_position: 5
+title: Webhooks
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Webhooks let Taskly notify your application when something happens, so you do not need to poll the API.
+
+## How webhooks work
+
+1. You [register an endpoint](/api/create-webhook-endpoint), which is an HTTPS URL on your server.
+2. When a subscribed event occurs, Taskly sends an HTTPS `POST` request to that URL.
+3. Your server verifies the signature, processes the event, and replies with a `2xx` status.
+
+## Register an endpoint
+
+<Tabs groupId="language">
+<TabItem value="curl" label="cURL" default>
+
+```bash
+curl -X POST https://api.taskly.example/v1/webhook-endpoints \
+  -H "Authorization: Bearer $TASKLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/hooks/taskly", "events": ["task.completed"]}'
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import os
+import requests
+
+response = requests.post(
+    "https://api.taskly.example/v1/webhook-endpoints",
+    headers={"Authorization": f"Bearer {os.environ['TASKLY_API_KEY']}"},
+    json={"url": "https://example.com/hooks/taskly", "events": ["task.completed"]},
+    timeout=10,
+)
+response.raise_for_status()
+print(response.json()["secret"])  # store this securely: it is shown only once
+```
+
+</TabItem>
+</Tabs>
+
+The response contains the endpoint `id` and a signing `secret` that starts with `whsec_`. **The secret is shown only once.** Store it in an environment variable or secrets manager.
+
+## Events
+
+| Event | Sent when |
+|---|---|
+| `task.created` | A task is created |
+| `task.completed` | A task is marked completed |
+
+## Payload
+
+Every event uses the same envelope. The `data` object contains the affected resource.
+
+```json
+{
+  "id": "evt_7c20ab",
+  "type": "task.completed",
+  "created_at": "2026-11-07T10:15:00Z",
+  "data": {
+    "task": {
+      "id": "tsk_8f2a1c",
+      "title": "Write quickstart guide",
+      "status": "completed",
+      "due_date": "2026-12-01",
+      "created_at": "2026-11-07T09:30:00Z"
+    }
+  }
+}
+```
+
+## Verify the signature
+
+Anyone can send a request to your endpoint, so always verify that Taskly sent it. Each request includes a `Taskly-Signature` header:
+
+```text
+Taskly-Signature: t=1731000000,v1=5257a869e7ecebeda32affa62cdca3fa51cad7e77a0e56ff536d0ce8e108d8bd
+```
+
+- `t` is the Unix timestamp when the event was signed.
+- `v1` is an HMAC-SHA256 signature, in hexadecimal.
+
+To verify a request:
+
+1. Read the `t` and `v1` values from the header.
+2. Build the signed payload: the timestamp, a period, then the **raw** request body (`<t>.<body>`).
+3. Compute an HMAC-SHA256 of the signed payload using your signing secret.
+4. Compare your result with `v1` using a constant-time comparison.
+5. Reject the request if the timestamp is more than 5 minutes old. This blocks replay attacks.
+
+```python title="taskly_webhooks.py"
+import hashlib
+import hmac
+import time
+
+TOLERANCE_SECONDS = 300
+
+
+def verify_signature(secret: str, header: str, body: bytes, now: float | None = None) -> bool:
+    try:
+        parts = dict(item.split("=", 1) for item in header.split(","))
+        timestamp = int(parts["t"])
+        received = parts["v1"]
+    except (KeyError, ValueError):
+        return False
+
+    current = time.time() if now is None else now
+    if abs(current - timestamp) > TOLERANCE_SECONDS:
+        return False
+
+    signed_payload = f"{timestamp}.".encode() + body
+    expected = hmac.new(secret.encode(), signed_payload, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(expected, received)
+```
+
+:::warning Use the raw body
+Compute the signature from the exact bytes you received. If you parse the JSON and serialise it again, whitespace or key order can change and verification will fail.
+:::
+
+## Example receiver
+
+This Flask handler verifies the signature and then reads the event:
+
+```python title="webhook_receiver.py"
+import os
+
+from flask import Flask, abort, request
+
+from taskly_webhooks import verify_signature
+
+app = Flask(__name__)
+SECRET = os.environ["TASKLY_WEBHOOK_SECRET"]
+
+
+@app.post("/hooks/taskly")
+def taskly_hook():
+    header = request.headers.get("Taskly-Signature", "")
+    if not verify_signature(SECRET, header, request.get_data()):
+        abort(401)
+
+    event = request.get_json()
+    if event["type"] == "task.completed":
+        print("Task completed:", event["data"]["task"]["id"])
+    return "", 200
+```
+
+The verification code in this guide has unit tests in the [project repository](https://github.com/shayanfarrukh/taskly-docs/tree/main/examples).
+
+## Delivery and retries
+
+- Reply with any `2xx` status within **10 seconds** to acknowledge an event.
+- If your endpoint times out or returns another status, Taskly retries with increasing delays for up to 24 hours.
+- The same event can be delivered more than once. Use the event `id` to ignore duplicates.
+- Do slow work, such as sending email, after you reply. Acknowledge first, then process.
+
+## Troubleshooting
+
+| Problem | Likely cause |
+|---|---|
+| Every request fails verification | You are using the wrong secret, or you re-serialised the body before verifying |
+| Valid requests are rejected as too old | Your server clock is wrong. Sync it with NTP. |
+| You see duplicate events | Expected behaviour. De-duplicate by event `id`. |
+| Events stop arriving | Your endpoint returned errors for 24 hours and Taskly stopped retrying. Check your logs. |

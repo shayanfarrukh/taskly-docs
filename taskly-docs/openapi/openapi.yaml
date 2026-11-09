@@ -1,0 +1,264 @@
+openapi: 3.1.0
+info:
+  title: Taskly Sample API
+  version: 1.0.0
+  summary: A fictional task-management API, created as a documentation sample.
+  description: |
+    Taskly is a **fictional** REST API created as a technical-writing sample. It does not exist,
+    and the server URL below does not resolve.
+
+    Use the API to create tasks, mark them complete, and receive webhook events when tasks change.
+
+    New here? Start with the [Quickstart](/quickstart).
+  license:
+    name: MIT
+    identifier: MIT
+servers:
+  - url: https://api.taskly.example/v1
+    description: Sample server (not a real endpoint)
+security:
+  - bearerAuth: []
+tags:
+  - name: Tasks
+    description: Create, retrieve, list and complete tasks.
+  - name: Webhooks
+    description: Register endpoints and receive task events.
+paths:
+  /tasks:
+    get:
+      tags: [Tasks]
+      operationId: listTasks
+      summary: List tasks
+      description: Returns a cursor-paginated list of tasks, newest first.
+      parameters:
+        - name: limit
+          in: query
+          description: Number of tasks to return, from 1 to 100.
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - name: cursor
+          in: query
+          description: Opaque cursor taken from the `next_cursor` field of the previous response.
+          schema: { type: string }
+        - name: status
+          in: query
+          description: Return only tasks with this status.
+          schema: { type: string, enum: [open, completed] }
+      responses:
+        '200':
+          description: A page of tasks.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TaskList' }
+              example:
+                data:
+                  - id: tsk_8f2a1c
+                    title: Write quickstart guide
+                    status: open
+                    due_date: '2026-12-01'
+                    created_at: '2026-11-07T09:30:00Z'
+                next_cursor: null
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+    post:
+      tags: [Tasks]
+      operationId: createTask
+      summary: Create a task
+      description: Creates a task with the status `open`. Triggers a `task.created` webhook event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewTask' }
+            example:
+              title: Write quickstart guide
+              due_date: '2026-12-01'
+      responses:
+        '201':
+          description: The task was created.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /tasks/{taskId}:
+    get:
+      tags: [Tasks]
+      operationId: getTask
+      summary: Retrieve a task
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: The requested task.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /tasks/{taskId}/complete:
+    post:
+      tags: [Tasks]
+      operationId: completeTask
+      summary: Mark a task as completed
+      description: Sets the task status to `completed` and triggers a `task.completed` webhook event.
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: The updated task.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: The task is already completed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              example:
+                error: { code: already_completed, message: Task tsk_8f2a1c is already completed. }
+  /webhook-endpoints:
+    post:
+      tags: [Webhooks]
+      operationId: createWebhookEndpoint
+      summary: Register a webhook endpoint
+      description: |
+        Registers an HTTPS URL to receive events. The signing secret is returned **once**,
+        so store it securely. See the [Webhooks guide](/webhooks) for how to verify signatures.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url, events]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: HTTPS URL that will receive events.
+                  example: https://example.com/hooks/taskly
+                events:
+                  type: array
+                  description: Event types to subscribe to.
+                  items: { type: string, enum: [task.created, task.completed] }
+                  example: [task.completed]
+      responses:
+        '201':
+          description: The endpoint was registered.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, example: whe_41b9d0 }
+                  secret:
+                    type: string
+                    description: Signing secret. Shown only in this response.
+                    example: whsec_example123
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+webhooks:
+  task.completed:
+    post:
+      tags: [Webhooks]
+      operationId: onTaskCompleted
+      summary: Task completed event
+      description: |
+        Sent when a task is marked completed. Verify the `Taskly-Signature` header
+        before trusting the payload.
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WebhookEvent' }
+      responses:
+        '200':
+          description: Return any 2xx status to acknowledge receipt.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Send your API key as `Authorization: Bearer YOUR_API_KEY`.'
+  parameters:
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      description: The task's unique ID.
+      schema: { type: string, example: tsk_8f2a1c }
+  schemas:
+    Task:
+      type: object
+      required: [id, title, status, created_at]
+      properties:
+        id: { type: string, example: tsk_8f2a1c }
+        title: { type: string, example: Write quickstart guide }
+        status: { type: string, enum: [open, completed], example: open }
+        due_date:
+          type: [string, 'null']
+          format: date
+          description: Due date, or null if none was set.
+          example: '2026-12-01'
+        created_at: { type: string, format: date-time, example: '2026-11-07T09:30:00Z' }
+    NewTask:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, maxLength: 200, description: Short description of the task. }
+        due_date: { type: string, format: date, description: Optional due date. }
+    TaskList:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/Task' }
+        next_cursor:
+          type: [string, 'null']
+          description: Pass as `cursor` to fetch the next page. Null on the last page.
+    WebhookEvent:
+      type: object
+      properties:
+        id: { type: string, example: evt_7c20ab }
+        type: { type: string, example: task.completed }
+        created_at: { type: string, format: date-time, example: '2026-11-07T10:15:00Z' }
+        data:
+          type: object
+          properties:
+            task: { $ref: '#/components/schemas/Task' }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string, example: invalid_request }
+            message: { type: string, example: title is required }
+  responses:
+    BadRequest:
+      description: The request was malformed or missing required fields.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: The API key is missing or invalid.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: The resource does not exist.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    RateLimited:
+      description: Too many requests. Wait the number of seconds in the `Retry-After` header, then retry.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema: { type: integer }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

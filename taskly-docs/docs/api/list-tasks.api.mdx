@@ -1,0 +1,69 @@
+---
+id: list-tasks
+title: "List tasks"
+description: "Returns a cursor-paginated list of tasks, newest first."
+sidebar_label: "List tasks"
+hide_title: true
+hide_table_of_contents: true
+api: eJztV21v2zYQ/isHfmoD2ZazYVv1ZfCwYAjWtVleUHSO4dDSyWItkQp5suMZ/u/DUZKt1K7brvu4T7ZI3j3PvfK4ESTnTkRjcSvdwolJIEyJVpIy+jIRkciVo3orEAm62KqS90QkrpEqqx1IiCvrjO2Vcq60JEyAhcCkQCwYgMYVOoJUWUd9EYhSWlkgoWXgjdCyQI9UKBKBUKz8sUK7PoB8UxUztDvNQAasZxFAak0BQ14ZhiGDuDjDQopoI2hdsn6lCedoRSAKpVVRFSIaBqKQT83/MGS4VFY5ieg83G6DHbXawNPc3pbyscLGF0BygbomRRnCg8YnmtZ7D5AqzBNvRYZQWlwqUzmw6EqjHR4l78gqPRddUo4kVe40qTpGYHS+bly2UpQBZcpBLX8KLRCo2TVjzgktAhGbosyRMBGT7XYSiJayY9nzMOSf5wRGUMo57iLW90o0oSY+K8syV7FPtsEHxwKbQzJm9gFjTozScmqSquESSd1T0lrJ9ivCwh2TtvhYKYsJm6MSEQhSlCNb3/oxtsjZO5XEZfAcTSVH3fMk2SEiEuQW05/SczmMxbZVfVLgnVWE8FipeOFIWoJ5pRJk4YbPV0Wjq9nvbgORVDhNJHV4jPeqdJXnLJYaW0gSkfAnP06fXysE3gjAWGARUClooxFW0oFDX8175PPw/Ife8LwXDhm/484jtjwD7pEq8IiqYS/88TZ8FX0XRmH4F2d/61rfrvxCp7JOWvrcsivpHEgHD21NkoEUKc58TbJOn7h9eMNWG+2Xc+ma5QMqr5UjNnpnQZug4zp3ugmyl/xEEuxzoA31PpZdJz/38Sd8NvnIReyP7Zb5fx8ODwv2NkMYXV3CAtegHBTKOaXnHH+llzJXyTeVcLcI0VpjDyutXv5s+ccm+UyFNXynjIl1dAp0Ts4/I+eDw7bvyNbuaoN24Qk2Ljx/dcSFxkAh9RoaZNeHd1JRnVm7G8xhbHTiQNW59XCNZNe9UUpoHyBDmaANeEfzFWfX7PZ61ZvfOX1I4KZRTQZWDDzD1Fis9Sg9P3k7erP+j69f8xopM1y/c/QcJWUiEgNqJiKHdtmOMZXNRSQyotJFg4EsVZ9P5et+Az1YDg8a7I3fgVoNvNCGQIJFmQPqpDRK00tfwQ7jyipae6AZSot2VDGV8aS7fcOBqf3XPbTzBpNrg8/f9aFDVqgTWJvK7joBd0rWZaz62+dCBL94WXj/9u56Orq6nP5+8f6h7otKp8aDdvpjvobG1tHVpQgEe60GG/bDfsikqqKQdu1nhlTFDCJzPzX0CqnlHAvUxNIBNF2PWUlITFzxlqcFzoP0D0xqOCiWODvb6T87g+uLm1tv5zOthHGmVSzz3soq4g7YaIZLgsSgA44VPilHwb2WOvFF3MTx7vo1zDA3q/1Ji87kS+zf63t959CfZlAyDW47KxfSLni3gPZ6D4DVW4xRLRFWOMuMWQAuUZODFTeIerKLM6nnNcIbXEGGFn+GG3+tNEMfwvjP3V0zeTHYXzwv+/d8zeQqRu18/TRD5h+XtzxUJahJpYqbjV/iMJfGUSF15zBfgkDHHgubfUv5hndDk8WETzQoc6n8mOPLbtNU5lhQ+4zJjCNe2Gxm0uGdzbdbXq7nZC6jRDk5y7lXpTJ3eILx1zw7jnJc4LrzwFnKvOIzgof5L2fxnz4wTtDcPXb+Jc8ve3OcILAbyPcEJvxhFTPwPa+9C30ga6lRHGPZde/BzcVadv38twvO4n8A95YhxQ==
+sidebar_class_name: "get api-method"
+info_path: api/taskly-sample-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+import Translate from "@docusaurus/Translate";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"List tasks"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/tasks"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Returns a cursor-paginated list of tasks, newest first.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+>
+  <Translate id="theme.openapi.request.title">Request</Translate>
+</Heading>
+
+<ParamsDetails
+  {...require("./list-tasks.ParamsDetails.json")}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  {...require("./list-tasks.RequestSchema.json")}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  {...require("./list-tasks.StatusCodes.json")}
+>
+  
+</StatusCodes>
+
+
+      

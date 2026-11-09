@@ -1,0 +1,69 @@
+---
+id: create-webhook-endpoint
+title: "Register a webhook endpoint"
+description: "Registers an HTTPS URL to receive events. The signing secret is returned **once**,"
+sidebar_label: "Register a webhook endpoint"
+hide_title: true
+hide_table_of_contents: true
+api: eJztVttu4zYQ/ZXBPCWGIjvbfaleCm8RoEYv68YOioVjZGlpbHEtkQpJWfEa/vdiKMp24mQXaJ8K1C+JeJk5c3jmskMnVhaTGf5Fi1zrtcV5hLoiI5zUapRhgqkh4Sjs36is0lI5jDAjmxpZ8TlM8JZW0joyFoSCX6bT8QTubn8Dp8FQSnJDQBtSzsYwzQmsXCmpVmApNeRAWjDkaqMog15Pq5R6veheWQ3WaUMgHZ+sDRXbGCZE4HKCWQcZVrXMaH7Rb8LCJSy1gVw37H5DRi633qNwtSEb3yuM0NBjTdZ90NkWk53/lIYyTJypKcJUK0fK8ZaoqkKmno/+F8vB7tCmOZWC/3PbijBBvfhCqQt2W0MzrE2BEbZxM6+VYWadJMs3efdowDoj1QojXGpTCocJ1kaesXxCbC4cNLIoXvLLHp9EWRVsNXeuskm/H1biVJd9T1HfCbsutrg/4DtCEcaI7ZnrGz4GfMQyrbZe8O6CwGn2KR2V9rV4SNUlk8EO41ZLGUbhUzMqXpjvT2DPznf9j9m1lVa2JfDd4Jr/PIfJ6qIgUmgEC6sVJmUM8x+/6/O3k9mroR54b3J6eH+9+DEbMMOtyl+78Rz75FlWxDDJdaNAq2ILUoHLfZq0BMQv3FlKH8L39bsfsOPr/WDwOkVB/p6hUhQsOspAGyiltYyh0zEsJRWZ/VfcneYEGaPNeTK0y9/lPdUZfZt5qTaikNlDCJDpL8lasfrOPSddQW0hCmBbBv06y98D7Fh9Q3jD8QjWtGUzHY/aQID0P4UHCr1Fl2tuL5W2HqRwOSbY1fCrLoctcv6YDRluU6FqHuqaqGTcVrI44Ohvrs/zyu9AawYulHYgwJAoDpXiEvdzn6e1kW7rHS1IGDLDmmHN5qfbE36llszTQwdqGByj9scwCYfOUZHKYKtrc5CNsPCZbWkjv3phJPDB34VPH+9uH4bj0cOvN58+x8gEsmZuj03spnuGlxS9WfqPlf+VehuhVEvtgwqvN/W3IHA5HI8wQn6VNpjreBAPOOi6LIXZYoJDWMqUgxAFsPmrUiixopK7yHA8iiD0Ao5aQKbTmrd82GBbyGeUBQySb/R6B/u9HtzeTKaex2dWHaW5kqkorhojnS+trWUYOcg0WWAt0JO0LrpXQmV+sAg64S67oEI3x5OGrC42FN+re3Vn2zGEnTod/PpIbQSlMGveLaEjNQI23/XqoPLQs6HJSbVXIc2FWrUe/qAGcjL0E0ycMNztXd5OPn/WMl1bXpxf9B8PH5ftaFPIlJT1UlDCK/D30ZRbdEbKyaUkE5ZYRpx+pVAnh7tJDsQR5htT3+5Y0P5zA2BIVkdPrl8VQiquc2Ema4vRDM+L0TzCnAtWMsPdbiEs3Zliv+flx5pY97N5hBthpFj4SYYzKSeRMeezHa6JU+PnlrSrKUPg40Xt566XHWEfdTeGaUqV++bZ+UlNHX+c8IMvwnBb+pKPRjTcSUSDCSJP+XzblzG/tsNCqFXtyzy2Nvn3N/dRO3c=
+sidebar_class_name: "post api-method"
+info_path: api/taskly-sample-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+import Translate from "@docusaurus/Translate";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Register a webhook endpoint"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/webhook-endpoints"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Registers an HTTPS URL to receive events. The signing secret is returned **once**,
+so store it securely. See the [Webhooks guide](/webhooks) for how to verify signatures.
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+>
+  <Translate id="theme.openapi.request.title">Request</Translate>
+</Heading>
+
+<ParamsDetails>
+  
+</ParamsDetails>
+
+<RequestSchema
+  {...require("./create-webhook-endpoint.RequestSchema.json")}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  {...require("./create-webhook-endpoint.StatusCodes.json")}
+>
+  
+</StatusCodes>
+
+
+      

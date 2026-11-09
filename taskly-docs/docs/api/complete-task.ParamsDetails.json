@@ -1,0 +1,1 @@
+{"parameters":[{"name":"taskId","in":"path","required":true,"description":"The task's unique ID.","schema":{"type":"string","example":"tsk_8f2a1c"}}]}

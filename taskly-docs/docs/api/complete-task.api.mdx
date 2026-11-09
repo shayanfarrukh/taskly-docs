@@ -1,0 +1,69 @@
+---
+id: complete-task
+title: "Mark a task as completed"
+description: "Sets the task status to `completed` and triggers a `task.completed` webhook event."
+sidebar_label: "Mark a task as completed"
+hide_title: true
+hide_table_of_contents: true
+api: eJztVktv20YQ/iuDudQ2qJcbtA0vhYvkIPQR1w8UqSzII3IkbkTu0rtLyarA/17MknrZStNDe8vJFmdnvm/es0FPc4fxCO/ILRyOIzQlW/LK6GGKMSamKHP2LGKMMGWXWFWKGGO8Ze/AZwye3AKcJ1858AYet1rpI5BOwVs1n7N1QPAoT7sH8hVPM2MWwEvWvosRlmSpYM9WaG1QU8EYo6gNU4xQCXBJPsMILT9VynKKsbcVv2R31xL7xkGl1VPFMHwnAC7JuCCMN+jXpdh23io9xwj5mYSXwLnF5IfZJQ0SrOuxILnSaMdO1C77ffnzGq0qU/KcBlRBSoz2rL08prLMVRLi2vvkRGPzmoiZfuLEHzk2QiVee+VzFu4hxmLaskBNyEvOSitZ86rhp9J/79zW9D8q/GGVZ3iqVLJwnqyHeaVSFuWWzyltXRVC35SsQyjajAvdveUgrSNMK55I7PaWRntTuspzUZsZW5DHGMPLl+l+VzGIIAJjQVRAzUAbzbAiB45Dce2RL/uX33UGl53+QPAPwnnClyPgjlcFnzA16PS/v+u/jb/tx/3+n1jvQxt6C+taPr3pD07XztX1EBa8BuWgUM4pPRc/lF5SrtL/rJjYWmNfV0zz+YTu8bPEpF+olJbvRDDZeQltwc7R/At6IVLi+45sE65tBN8HgtsQvjkdQsvOVDZhSA070MYDPyvnvwbvKHhvTwcvjHDlgHLLlK5h17Bfw9eE70DlgHRDC9uoTfZj7gA89D/sp+5nwlzXDW7BPjOye0vjQhxk2cXYkwy53qbZhHVvqylbge1yuy8rm2OMmfeli3s9KlVXFPJ1t2XfWw5e7/EggcYMnEnnEFimHFinpVHan6NsQcdJZZVfB6Apk2V7VQm50fhQfCvl0GTt8NEuB0Juu4fld/PoxHWhU1ibyu5mIzl4FFvGqr9CBcbwU9CFjx/ubyZX18PJz+8/PnbD8FV6ZgLowRDO19D6enU9xAglag3YoNvv9oVUVRRk1xjjFcxUIiCUh+boFKRpzgVrL9oRtDtDWBGkJqlEFGiBCyDdVy61HCT/cHGxs39xATfvb++Cn0dWPSeZVgnlnZVVXnZCaxmG/sWUix50OLWyXR7vb36BKedmtX8pEzJfcvdBP+h7x+G1gHrT4gZPXQQF2YVIi12BRuGSs5ywWvLx1eZglbFuVCHJSM8bhN94BRlb/hFuw9WwUj4LkKPfd6fE+Ky3vyvOuw9yK+QqYe1Cn7XX36/DOzn9UtZezRTb9pOkWZqkIH34WLhTM9DIwWFLHmVjsx9r/88l25a752ffK3NS4dIJ/blpm3oU7lq55+Ldgbvr63GEmUyAeISbzZQc39u8ruXzU8VSoqNxhEuyiqZS4KMNpsrJ/ynGM8rdy4P40N+zm3bWncPnzuST7NuPpNfSPZRX8gsjXPB6f6TX4zrCjCmVRI02rfAqSbj0B2qvNonMkN3wu/5wKwn+G8OfVsk=
+sidebar_class_name: "post api-method"
+info_path: api/taskly-sample-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+import Translate from "@docusaurus/Translate";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Mark a task as completed"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/tasks/{taskId}/complete"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Sets the task status to `completed` and triggers a `task.completed` webhook event.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+>
+  <Translate id="theme.openapi.request.title">Request</Translate>
+</Heading>
+
+<ParamsDetails
+  {...require("./complete-task.ParamsDetails.json")}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  {...require("./complete-task.RequestSchema.json")}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  {...require("./complete-task.StatusCodes.json")}
+>
+  
+</StatusCodes>
+
+
+      
